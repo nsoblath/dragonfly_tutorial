@@ -1,0 +1,26 @@
+slowdash_project:
+  name: Dragonfly
+  title: Dragonfly Tutorial
+
+  system:
+    file_mode: 0666
+    our_security_is_perfect: true
+
+  data_source:
+    - type: PostgreSQL
+      parameters:
+        url: ${DRIPLINE_DB_URL:-postgresql://postgres:postgres@postgres:5432/sensor_data}
+        time_series:
+          schema: numeric_data[sensor_name]@timestamp=value_cal
+
+  style:
+    theme: light
+    title:
+      background: black
+    logo:
+      file: P8_Logo_2017.png
+      position:
+      background: linear-gradient(160deg, black, rgb(24,24,24), rgba(255,255,255,0.8), rgb(24,24,24), black)
+    panel:
+      plotTicksOutwards: true
+      plotFrameThickness: 0

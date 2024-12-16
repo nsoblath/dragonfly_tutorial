@@ -1,0 +1,61 @@
+services:
+
+  # The classic key-value store, a configuration based on the base Service class
+  key-value-store:
+    image: ghcr.io/project8/dragonfly:develop-dev
+    depends_on:
+      rabbit-broker:
+        condition: service_healthy
+    volumes:
+      - ./services/key-value-store.yaml:/root/key-value-store.yaml
+      - ./dripline_mesh.yaml:/root/.dripline_mesh.yaml
+    environment:
+      - DRIPLINE_USER=dripline
+      - DRIPLINE_PASSWORD=dripline
+    command: >
+      bash -c "dl-serve -vv -c /root/key-value-store.yaml"
+
+  sensor-logger:
+    image: ghcr.io/project8/dragonfly:develop-dev
+    depends_on:
+      rabbit-broker:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./services/sensor-logger.yaml:/root/sensor-logger.yaml
+      - ./dripline_mesh.yaml:/root/.dripline_mesh.yaml
+    environment:
+      - DRIPLINE_USER=dripline
+      - DRIPLINE_PASSWORD=dripline
+    command:
+      bash -c "dl-serve -vv -c /root/sensor-logger.yaml"
+
+  scpi-service:
+    image: ghcr.io/project8/dragonfly:develop-dev
+    depends_on:
+      rabbit-broker:
+        condition: service_healthy
+      scpi-device:
+        condition: service_started
+    volumes:
+      - ./services/scpi-device-service.yaml:/root/scpi-device.yaml
+      - ./dripline_mesh.yaml:/root/.dripline_mesh.yaml
+    environment:
+      - DRIPLINE_USER=dripline
+      - DRIPLINE_PASSWORD=dripline
+    command:
+      bash -c "dl-serve -vv -c /root/scpi-device.yaml"
+
+  dl-mon:
+    image: ghcr.io/project8/dragonfly:develop-dev
+    depends_on:
+      rabbit-broker:
+        condition: service_healthy
+    volumes:
+      - ./dripline_mesh.yaml:/root/.dripline_mesh.yaml
+    environment:
+      - DRIPLINE_USER=dripline
+      - DRIPLINE_PASSWORD=dripline
+    command:
+      bash -c "dl-mon -a sensor_value.#"
