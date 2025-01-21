@@ -96,6 +96,7 @@ class ASCPIDevice:
         """
         Start the device: listens on the network for incoming queries.
         """
+        print(f'Attempting to bind to {self.host}:{self.port}')
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as self.socket:
             self.socket.bind((self.host, self.port))
             print(f'SCPI device is binding to {self.host}:{self.port}')
