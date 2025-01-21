@@ -1,0 +1,51 @@
+services:
+
+  # The classic key-value store, a configuration based on the base Service class
+  key-value-store:
+    image: ghcr.io/project8/dragonfly:develop-dev
+    depends_on:
+      - rabbit-broker
+    volumes:
+      - ./services/key-value-store.yaml:/root/key-value-store.yaml
+      - ./dripline_mesh.yaml:/root/.dripline_mesh.yaml
+    environment:
+      - DRIPLINE_USER=dripline
+      - DRIPLINE_PASSWORD=dripline
+    command: >
+      bash -c "dl-serve -vv -c /root/key-value-store.yaml"
+    networks:
+      - mesh
+
+  sensor-logger:
+    image: ghcr.io/project8/dragonfly:develop-dev
+    depends_on:
+      - rabbit-broker
+      - postgres
+    volumes:
+      - ./services/sensor-logger.yaml:/root/sensor-logger.yaml
+      - ./dripline_mesh.yaml:/root/.dripline_mesh.yaml
+    environment:
+      - DRIPLINE_USER=dripline
+      - DRIPLINE_PASSWORD=dripline
+    command:
+      bash -c "dl-serve -vv -c /root/sensor-logger.yaml"
+    networks:
+      - mesh
+
+  dl-mon:
+    image: ghcr.io/project8/dragonfly:develop-dev
+    depends_on:
+      - rabbit-broker
+    volumes:
+      - ./dripline_mesh.yaml:/root/.dripline_mesh.yaml
+    environment:
+      - DRIPLINE_USER=dripline
+      - DRIPLINE_PASSWORD=dripline
+    command:
+      bash -c "dl-mon -a sensor_value.#"
+    networks:
+      - mesh
+
+networks:
+  mesh:
+    external: TRUE

@@ -35,7 +35,7 @@
 2. Open web pages
   * RabbitMQ management @ `localhost:15672`
   * SlowDash @ `localhost:18881`
-  * DL Agent @ `localhost:8080/web/agent.html`
+  * ~~DL Agent @ `localhost:8080/web/agent.html`~~
 3. Then start the dripline services:
   ```
   > docker stack deploy --compose-file docker-compose-services.yaml services
@@ -50,24 +50,24 @@
   4. Select Create
   5. Change the auto-update time to 30 seconds
 * ~~Get a value with the DL Agent web page~~
-  1. Select Type: GET
-  2. Fill in Routing Key: `peaches`
+  1. ~~Select Type: GET~~
+  2. ~~Fill in Routing Key: `peaches`~~
 * Get a value using the CL
-  1. Start a new interactive container with a bash shell and attach it to the `mesh` network
+  1. Get a bash prompt using the key-value-store container
     ```
-    > docker run -it --rm --network mesh ghcr.io/driplineorg/dripline-python:latest bash
+    > docker exec -it $(docker ps -q -f name=key-value-store) bash
     ```
   2. Get the value of `peaches`
     ```
-    # dl-agent get -b rabbit-broker -u dripline --password dripline peaches
+    # dl-agent get peaches
     ```
   3. Get the IDN string from the SCPI Device
     ```
-    # dl-agent get -b rabbit-broker -u dripline --password dripline idn
+    # dl-agent get idn
     ```
 * Set a value and see the change
   1. Set the value of `peaches`
     ```
-    # dl-agent set -b rabbit-broker -u dripline --password dripline peaches 5
+    # dl-agent set peaches 5
     ```
   2. Check on SlowDash to see the change recorded

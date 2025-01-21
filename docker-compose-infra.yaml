@@ -12,21 +12,21 @@ services:
     networks:
       - mesh
 
-  http-server:
-    image: ghcr.io/project8/dragonfly:develop-dev
-    depends_on:
-      - rabbit-broker
-    ports:
-      - "8080:8080"
-    volumes:
-      - ./dripline_mesh.yaml:/root/.dripline_mesh.yaml
-    environment:
-      - DRIPLINE_USER=dripline
-      - DRIPLINE_PASSWORD=dripline
-    command: >
-      bash -c "dl-http-server web_root=/usr/local/src_py/html"
-    networks:
-      - mesh
+#  http-server:
+#    image: ghcr.io/project8/dragonfly:develop-dev
+#    depends_on:
+#      - rabbit-broker
+#    ports:
+#      - "8080:8080"
+#    volumes:
+#      - ./dripline_mesh.yaml:/root/.dripline_mesh.yaml
+#    environment:
+#      - DRIPLINE_USER=dripline
+#      - DRIPLINE_PASSWORD=dripline
+#    command: >
+#      bash -c "dl-http-server web_root=/usr/local/src_py/html"
+#    networks:
+#      - mesh
 
   postgres:
     image: postgres:16.0
