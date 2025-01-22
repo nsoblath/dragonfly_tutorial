@@ -4,8 +4,69 @@ import signal
 import socket
 import re
 
+dict_from_emoji = {
+    "💮": "0", 
+    "🏞": "1",
+    "🍚": "2",
+    "🗿": "3", 
+    "🎆": "4", 
+    "🐳": "5", 
+    "🔈": "6", 
+    "📒": "7", 
+    "🔨": "8", 
+    "🌏": "9", 
+    "☕": "a", 
+    "📈": "b", 
+    "😨": "c", 
+    "👘": "d", 
+    "💹": "e", 
+    "👗": "f", 
+    "💋": "g", 
+    "🌤": "h", 
+    "🚼": "i", 
+    "🎡": "j", 
+    "☦": "k", 
+    "🕣": "l", 
+    "🚷": "m", 
+    "🐥": "n", 
+    "🌹": "o", 
+    "➕": "p", 
+    "🅿": "q", 
+    "☄": "r", 
+    "🚟": "s", 
+    "👽": "t", 
+    "🍫": "u", 
+    "🚜": "v", 
+    "🏄": "w", 
+    "✏": "x", 
+    "🍀": "y", 
+    "🎴": "z",
+    "❓": "?",
+    "🎍": " ",
+    "🐿": ".",
+    "🍇": ",",
+    "🔖": ":",
+    "🐹": ";",
+    "🌌": "_",
+    "😝": "-",
+    "↩": "\n",
+}
 
-class SCPICommand:
+dict_to_emoji = {v:k for k,v in dict_from_emoji.items()}
+
+def convert_from_emoji(my_string):
+    converted_list = [dict_from_emoji[item] for item in list(my_string)]
+    return ''.join(converted_list)
+
+def convert_to_emoji(my_string):
+    try:
+        converted_list = [dict_to_emoji[item] for item in list(my_string.casefold())]
+        return ''.join(converted_list)
+    except Exception as err:
+        print(f'Error converting to emojis: {err}')
+        return ''
+
+class UnusualSCPICommand:
     """
     This class represents a single SCPI get/set command pair.
 
@@ -65,7 +126,7 @@ class SCPICommand:
         self.value = query.lstrip('*').lstrip(self.command).strip()
         return True, None
 
-class ASCPIDevice:
+class UnusualSCPIDevice:
     """
     This class represents a semi-SCPI-compliant device.
 
@@ -76,7 +137,7 @@ class ASCPIDevice:
 
     This class was composed with the aid of ChatGPT 3.5.
     """
-    def __init__(self, host, port, commands, ending='\n'):
+    def __init__(self, host, port, commands, ending='↩'):
         self.host = host
         self.port = port
         self.socket = None
@@ -84,7 +145,7 @@ class ASCPIDevice:
         self.ending = ending
 
         #self.commands = [ SCPICommand(key, value) for key, value in commands.items() ]
-        self.commands = [ SCPICommand(**command_args) for command_args in commands]
+        self.commands = [ UnusualSCPICommand(**command_args) for command_args in commands]
         print(f'SCPI device initializing with commands: {[command.command for command in self.commands]}')
 
         signal.signal(signal.SIGINT, self.signal_handler)
@@ -154,12 +215,16 @@ class ASCPIDevice:
 
         print(f'Received query: {repr(data)}')
         if data:
-            response = str(self.handle_query(data)) + self.ending
-            print(f'Sending response <{repr(response)}>')
-            self.connection.send(response.encode('utf-8'))
+            converted_data = convert_from_emoji(data)
+            print(f'Converted to {converted_data}')
+            response = str(self.handle_query(converted_data))
+            print(f'Response prior to conversion: {response}')
+            converted_response = convert_to_emoji(response) + self.ending
+            print(f'Sending response <{repr(converted_response)}>')
+            self.connection.send(converted_response.encode('utf-8'))
 
 
-def main(host="127.0.0.1", port=24596):
+def main(host="127.0.0.1", port=13843):
     print('Setting up SCPI device')
     commands = [
         {'command': 'IDN', 'value': 'Instrument Model XYZ,1234,1.0,Serial123456', 'read_only': True},
@@ -169,7 +234,7 @@ def main(host="127.0.0.1", port=24596):
         {'command': 'FREQuency', 'value': 1.05457},
     ]
 
-    scpi_handler = ASCPIDevice(host, port, commands)
+    scpi_handler = UnusualSCPIDevice(host, port, commands)
     print('Starting SCPI device')
     scpi_handler.start()
 
@@ -177,3 +242,10 @@ def main(host="127.0.0.1", port=24596):
 if __name__ == "__main__":
     import sys
     main(*sys.argv[1:])
+
+    #test_string = "0123456789abcdefghijklmnopqrstuvwxyzABC?;"
+    #print(test_string)
+    #test_emoji = convert_to_emoji(test_string)
+    #print(test_emoji)
+    #test_rt_string = convert_from_emoji(test_emoji)
+    #print(test_rt_string)

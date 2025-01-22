@@ -1,0 +1,22 @@
+name: unusual_device
+module: EthernetSCPIService
+socket_info: ('unusual-device',13843)
+cmd_at_reconnect: null
+command_terminator: "↩"
+response_terminator: "↩"
+endpoints:
+  - name: unus-idn
+    module: Scientizer3000Entity
+    base_str: IDN
+  - name: unus-opt
+    module: Scientizer3000Entity
+    base_str: OPT
+  - name: unus-read
+    module: Scientizer3000Entity
+    base_str: READ
+  - name: unus-voltage
+    module: Scientizer3000Entity
+    base_str: VOLTage
+  - name: unus-frequency
+    module: Scientizer3000Entity
+    base_str: FREQuency

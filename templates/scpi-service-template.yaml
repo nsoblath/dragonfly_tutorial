@@ -1,0 +1,11 @@
+name: [device name]
+module: EthernetSCPIService
+socket_info: ('[Docker service name]',[port])
+cmd_at_reconnect: null
+command_terminator: "\n"
+response_terminator: "\n"
+endpoints:
+  - name: [a name]
+    module: [SimpleSCPIEntity or another class]
+    base_str: [SCPI string]
+  ...

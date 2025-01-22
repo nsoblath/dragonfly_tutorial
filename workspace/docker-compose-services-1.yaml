@@ -37,6 +37,7 @@ services:
     depends_on:
       - rabbit-broker
     volumes:
+      - ./services/heartbeat-monitor.yaml:/root/heartbeat-monitor.yaml
       - ./dripline_mesh.yaml:/root/.dripline_mesh.yaml
     environment:
       - DRIPLINE_USER=dripline

@@ -1,0 +1,20 @@
+services:
+
+  unusual-device:
+    image: python:3.12.1-slim-bookworm
+    volumes:
+      - ./unusual_device/unusual_device.py:/root/unusual_device.py
+    command: 
+      - /root/unusual_device.py
+      - 0.0.0.0
+    ports:
+      - "13843:13843"
+    environment:
+      PYTHONUNBUFFERED: 1  # don't buffer printing to stdout
+    networks:
+      - mesh
+
+networks:
+  mesh:
+    external: TRUE
+

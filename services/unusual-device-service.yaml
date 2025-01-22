@@ -1,0 +1,22 @@
+name: unusual_device
+module: EthernetSCPIService
+socket_info: ('unusual-device',13843)
+cmd_at_reconnect: null
+command_terminator: "\n"
+response_terminator: "\n"
+endpoints:
+  - name: idn
+    module: EmojiSCPIEntity
+    base_str: IDN
+  - name: opt
+    module: EmojiSCPIEntity
+    base_str: OPT
+  - name: read
+    module: EmojiSCPIEntity
+    base_str: READ
+  - name: voltage
+    module: EmojiSCPIEntity
+    base_str: VOLTage
+  - name: frequency
+    module: EmojiSCPIEntity
+    base_str: FREQuency

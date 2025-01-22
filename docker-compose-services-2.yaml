@@ -1,0 +1,21 @@
+services:
+
+  scpi-service:
+    image: ghcr.io/project8/dragonfly:develop-dev
+    depends_on:
+      - rabbit-broker
+      - scpi-device
+    volumes:
+      - ./services/scpi-device-service.yaml:/root/scpi-device.yaml
+      - ./dripline_mesh.yaml:/root/.dripline_mesh.yaml
+    environment:
+      - DRIPLINE_USER=dripline
+      - DRIPLINE_PASSWORD=dripline
+    command:
+      bash -c "dl-serve -vv -c /root/scpi-device.yaml"
+    networks:
+      - mesh
+
+networks:
+  mesh:
+    external: TRUE

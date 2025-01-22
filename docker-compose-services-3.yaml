@@ -1,0 +1,21 @@
+services:
+
+  unusual:
+    image: ghcr.io/project8/dragonfly:workshop
+    depends_on:
+      - rabbit-broker
+      - unusual-device
+    volumes:
+      - ./services/unusual-device-service.yaml:/root/unusual-device.yaml
+      - ./dripline_mesh.yaml:/root/.dripline_mesh.yaml
+    environment:
+      - DRIPLINE_USER=dripline
+      - DRIPLINE_PASSWORD=dripline
+    command:
+      bash -c "dl-serve -vv -c /root/unusual-device.yaml"
+    networks:
+      - mesh
+
+networks:
+  mesh:
+    external: TRUE
