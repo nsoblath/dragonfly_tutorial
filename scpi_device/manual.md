@@ -6,6 +6,8 @@ Congratulations on your purchase of the Scientizer 1.0!  You're well on your way
 
 This device implements an interface that's compatible with the basic aspecs of the SCPI standard.  In particular, it does not pay attention to the tree hierarchy of commands, or handle multiple simultaneous commands.
 
+The device communicates over port 24596.
+
 ### Available commands
 
 * IDN: get -- returns information about the device

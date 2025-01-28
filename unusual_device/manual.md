@@ -8,6 +8,8 @@ This device implements an interface that's compatible with the basic aspecs of t
 
 Also, all SCPI messages to the device, and those sent from the device, are enocded as a fixed set of emojis.  Because who doesn't want a little more color and variety in their network communications?  The conversion table in use is below.
 
+The device communicates over port 13843.
+
 ### Available commands
 
 * IDN: get -- returns information about the device
