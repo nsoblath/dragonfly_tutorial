@@ -1,5 +1,8 @@
 # Dragonfly Tutorial
 
+In this tutorial we'll go through a scenario in which we'll simulate establishing and developing an experimental lab setup. 
+The tutorial has an intial setup stage, and then three tutorial stages.
+
 ## Objectives
 
 1. Workflow for dragonfly development
@@ -13,31 +16,39 @@
 
 ## Setup
 
-1. Clone dragonfly_tutorial
+By the end of this setup, you will have the following:
+
+* Three directories:
+  * `dragonfly_tutorial`: clone of the `project8/dragonfly_tutorial` repo, which will provide the source information for this tutorial
+  * `dragonfly`: clone of the `project8/dragonfly` repo, which we'll be modifying to add code that will address the laboratory setup in our scenario.
+  * `workspace`: this will represent the repo in which the configuration details for our laboratory setup live.
+* A Docker Swarm that consists of just the host machine that you're working on.
+* A Docker network that will be used to communicate between all of our services.
+
+0. Start in a directory that, for the purposes of these instructions, we'll call `top`.  All of our tutorial material will go in this directory.  On your machine it could be a dedicated directory that you create for going through this tutorial, or some other location.
+1. Clone dragonfly_tutorial into the `top` directory
   ```
   > git clone git@github.com:project8/dragonfly_tutorial
   ```
-2. Clone dragonfly into the dragonfly_tutorial directory and choose the right branch
+2. Clone dragonfly into the `top` directory and choose the right branch
   ```
-  > cd dragonfly_tutorial
   > git clone git@github.com:project8/dragonfly
   > cd dragonfly
   > git checkout with-hbmon
   ```
-3. Create your workspace directory and copy in docker-compose files
+3. Create your `workspace` directory and two subdirectories, and copy in pre-made docker-compose and dripline config files
   ```
   > cd ..
   > mkdir workspace
-  > cp docker-compose-infra.yaml workspace
-  > cp docker-compose-services-1.yaml workspace
+  > cp dragonfly_tutorial/docker workspace
+  > cp dragonfly_tutorial/services workspace
+  > cp dragonfly_tutorial/infrastructure workspace
   ```
-4. Edit the docker-compose files to refer to the right directories
-  * Directory paths to `dragonfly_tutorial` should be to `../` instead of `./`
-5. Create the swarm on the primary node.  For this tutorial, we'll be running on a single node, so the IP can be the localhost, `127.0.0.1`.
+4. Create the swarm on the primary node.  For this tutorial, we'll be running on a single node, so the IP can be the localhost, `127.0.0.1`.
   ```
   > docker swarm init --advertise-addr 127.0.0.1
   ```
-6. Create an overlay network.  This is what the services will use to communicate with each other.  The `attachable` attribute means that other containers can be added, e.g. to do diagnostics on the fly.  Run this on the primary node.  For the `[name]` argument, we suggest using `mesh`, and that's what's assumed in the relevant YAML files included in this repository.
+5. Create an overlay network.  This is what the services will use to communicate with each other.  The `attachable` attribute means that other containers can be added, e.g. to do diagnostics on the fly.  Run this on the primary node.  For the `[name]` argument, we suggest using `mesh`, and that's what's assumed in the relevant YAML files included in this repository.
   ```
   > docker network create \
     --attachable \
@@ -50,7 +61,7 @@
 
 1. Start with the infrastructure services:
   ```
-  > docker stack deploy --compose-file docker-compose-infra-1.yaml infra-1
+  > docker stack deploy --compose-file docker/docker-compose-infra-1.yaml infra-1
   ```
   Ensure that they are running stably.
 2. Open web pages
@@ -58,7 +69,7 @@
   * SlowDash @ `localhost:18881`
 3. Deploy the services in `docker-compose-services-1.yaml
   ```
-  > docker stack deploy --compose-file docker-compose-services-1.yaml serv-1
+  > docker stack deploy --compose-file docker/docker-compose-services-1.yaml serv-1
   ```
 4. Verify that the expected queues are present in the rabbitmq website
 5. Verify that the heartbeat monitor is seeing the expected heartbeats
@@ -82,13 +93,14 @@
 
 1. Create the config file for the SCPI device
   1. Use the `scpi_device/manual.md` to know the available commands
-  2. Copy `templates/scpi-service-template.yaml` to `workspace/services/scpi-device-service.yaml`
+  2. Copy `dragonfly_tutorial/templates/scpi-service-template.yaml` to `workspace/services/scpi-device-service.yaml`
   3. Fill in the endpoints according to the commands
 2. Create the container specification for the SCPI device service
-  * Can be copied from `docker-compose-services-2.yaml` or modeled on the KVS Docker specification
+  1. Copy `dragonfly_tutorial/templates/docker-compose-services-X.yaml` to `workspace/docker/docker-compose-services-2.yaml`
+  2. Fill in the missing information indicated by angle brackets (`<...>`)
 3. Deploy the new service
   ```
-  > docker stack deploy --compose-file docker-compose-services-2.yaml serv-2
+  > docker stack deploy --compose-file docker/docker-compose-services-2.yaml serv-2
   ```
 4. Verify that the service is stably running
   * You should see the channel on the rabbitmq website
@@ -99,10 +111,10 @@
 
 ## Stage 3
 
-1. Create your custom code and add your code to `workspace/dragonfly/dripline` and edit `__init__.py`
+1. Create your custom code and add your code to `dragonfly/dripline/extensions` and edit `__init__.py`
 2. Create the config file for the SCPI device
-  1. Use the `scpi_device/manual.md` to know the available commands
-  2. Copy `templates/scpi-service-template.yaml` to `workspace/services/scpi-device-service.yaml`
+  1. Use the `unusual_device/manual.md` to know the available commands
+  2. Copy `dragonfly_tutorial/templates/scpi-service-template.yaml` to `workspace/services/unusual-device-service.yaml`
   3. Fill in the endpoints according to the commands
 3. Run the dev container:
   ```

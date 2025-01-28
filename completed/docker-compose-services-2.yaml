@@ -7,7 +7,7 @@ services:
       - scpi-device
     volumes:
       - ./services/scpi-device-service.yaml:/root/scpi-device.yaml
-      - ./dripline_mesh.yaml:/root/.dripline_mesh.yaml
+      - ./infrastructure/dripline_mesh.yaml:/root/.dripline_mesh.yaml
     environment:
       - DRIPLINE_USER=dripline
       - DRIPLINE_PASSWORD=dripline

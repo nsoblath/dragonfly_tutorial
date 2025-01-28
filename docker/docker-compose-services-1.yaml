@@ -7,7 +7,7 @@ services:
       - rabbit-broker
     volumes:
       - ./services/key-value-store.yaml:/root/key-value-store.yaml
-      - ./dripline_mesh.yaml:/root/.dripline_mesh.yaml
+      - ./infrastructure/dripline_mesh.yaml:/root/.dripline_mesh.yaml
     environment:
       - DRIPLINE_USER=dripline
       - DRIPLINE_PASSWORD=dripline
@@ -23,7 +23,7 @@ services:
       - postgres
     volumes:
       - ./services/sensor-logger.yaml:/root/sensor-logger.yaml
-      - ./dripline_mesh.yaml:/root/.dripline_mesh.yaml
+      - ./infrastructure/dripline_mesh.yaml:/root/.dripline_mesh.yaml
     environment:
       - DRIPLINE_USER=dripline
       - DRIPLINE_PASSWORD=dripline
@@ -37,7 +37,7 @@ services:
     depends_on:
       - rabbit-broker
     volumes:
-      - ./dripline_mesh.yaml:/root/.dripline_mesh.yaml
+      - ./infrastructure/dripline_mesh.yaml:/root/.dripline_mesh.yaml
     environment:
       - DRIPLINE_USER=dripline
       - DRIPLINE_PASSWORD=dripline

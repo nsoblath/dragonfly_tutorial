@@ -7,7 +7,7 @@ services:
       - unusual-device
     volumes:
       - ./services/unusual-device-service.yaml:/root/unusual-device.yaml
-      - ./dripline_mesh.yaml:/root/.dripline_mesh.yaml
+      - ./infrastructure/dripline_mesh.yaml:/root/.dripline_mesh.yaml
     environment:
       - DRIPLINE_USER=dripline
       - DRIPLINE_PASSWORD=dripline

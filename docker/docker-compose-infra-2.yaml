@@ -3,7 +3,7 @@ services:
   unusual-device:
     image: python:3.12.1-slim-bookworm
     volumes:
-      - ./unusual_device/unusual_device.py:/root/unusual_device.py
+      - ./infrastructure/unusual_device.py:/root/unusual_device.py
     command: 
       - /root/unusual_device.py
       - 0.0.0.0
